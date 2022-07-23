@@ -1,0 +1,105 @@
+CREATE DATABASE WEATHERAWS;
+
+create table json_weather_data (ANJI_DATA variant);
+
+
+
+SHOW INTEGRATIONS;
+
+create stage nyc_weather
+url = 's3://snowflake-workshop-lab/weather-nyc';
+
+
+LIST @nyc_weather;
+
+
+copy into json_weather_data
+from @nyc_weather
+file_format = (type=json)
+FORCE = TRUE;
+
+
+
+SELECT * FROM "WEATHERAWS"."PUBLIC"."JSON_WEATHER_DATA";
+
+
+SELECT ANJI_DATA:city.coord.lat AS LATITUDE,
+ANJI_DATA:city.coord.lon AS LONGTITUDE
+FROM
+"WEATHERAWS"."PUBLIC"."JSON_WEATHER_DATA";
+
+select
+ANJI_DATA:time::timestamp as observation_time,
+ANJI_DATA:city.id::int as city_id,
+ANJI_DATA:city.name::string as city_name,
+ANJI_DATA:city.country::string as country,
+ANJI_DATA:city.coord.lat::float as city_lat,
+ANJI_DATA:city.coord.lon::float as city_lon,
+ANJI_DATA:clouds.all::int as clouds,
+(ANJI_DATA:main.temp::float)-273.15 as temp_avg,
+(ANJI_DATA:main.temp_min::float)-273.15 as temp_min,
+(ANJI_DATA:main.temp_max::float)-273.15 as temp_max,
+ANJI_DATA:weather[0].main::string as weather,
+ANJI_DATA:weather[0].description::string as weather_desc,
+ANJI_DATA:weather[0].icon::string as weather_icon,
+ANJI_DATA:wind.deg::float as wind_dir,
+ANJI_DATA:wind.speed::float as wind_speed
+from json_weather_data
+where city_id = 5128638;
+
+
+SELECT * FROM "WEATHERAWS"."PUBLIC"."JSON_WEATHER_DATA_VIEW";
+
+SELECT GET_DDL('VIEW','"WEATHERAWS"."PUBLIC"."JSON_WEATHER_DATA_VIEW"');
+
+SELECT COUNT (*) FROM"WEATHERAWS"."PUBLIC"."JSON_WEATHER_DATA_VIEW";
+
+SELECT * FROM "WEATHERAWS"."PUBLIC"."JSON_WEATHER_DATA_VIEW";
+
+
+
+
+
+create view json_weather_data_view as
+
+create or replace view JSON_WEATHER_DATA_VIEW(
+OBSERVATION_TIME,
+CITY_ID,
+CITY_NAME,
+COUNTRY,
+CITY_LAT,
+CITY_LON,
+CLOUDS,
+TEMP_AVG,
+TEMP_MIN,
+TEMP_MAX,
+WEATHER,
+WEATHER_DESC,
+WEATHER_ICON,
+WIND_DIR,
+WIND_SPEED
+) as
+
+create or replace view JSON_WEATHER_DATA_VIEW AS 
+select
+ANJI_DATA:time::timestamp as observation_time,
+ANJI_DATA:city.id::int as city_id,
+ANJI_DATA:city.name::string as city_name,
+ANJI_DATA:city.country::string as country,
+ANJI_DATA:city.coord.lat::float as city_lat,
+ANJI_DATA:city.coord.lon::float as city_lon,
+ANJI_DATA:clouds.all::int as clouds,
+(ANJI_DATA:main.temp::float)-273.15 as temp_avg,
+(ANJI_DATA:main.temp_min::float)-273.15 as temp_min,
+(ANJI_DATA:main.temp_max::float)-273.15 as temp_max,
+ANJI_DATA:weather[0].main::string as weather,
+ANJI_DATA:weather[0].description::string as weather_desc,
+ANJI_DATA:weather[0].icon::string as weather_icon,
+ANJI_DATA:wind.deg::float as wind_dir,
+ANJI_DATA:wind.speed::float as wind_speed
+from json_weather_data
+where city_id = 5128638;
+
+
+
+
