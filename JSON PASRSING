@@ -1,0 +1,29 @@
+  
+create or replace table person_address as
+select COLUMN1 as person_id, parse_json(COLUMN2) as per_json
+ from values
+   (12712555,
+   '{ name:  { first: "John", last: "Smith"},
+     contact: [
+     { business:[
+       { type: "phone", content:"555-1234" },
+       { type: "email", content:"j.smith@company.com" } ] } ] }'),
+   (98127771,
+   '{ name:  { first: "Jane", last: "Doe"},
+     contact: [
+     { business:[
+       { type: "phone", content:"555-1236" },
+       { type: "email", content:"j.doe@company.com" } ] } ] }') ;  
+       
+       
+SELECT * FROM PERSON_ADDRESS;  
+
+
+select person_id as "ID",
+ p.per_json:name:first as first_name,
+ p.per_json:name:last as last_name,
+   c_d.value:type as "Type",
+   c_d.value:content as "Details"
+from person_address p,
+   lateral flatten(input => p.per_json, path => 'contact') c,
+   lateral flatten(input => c.value:business) c_d;
