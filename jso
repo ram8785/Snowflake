@@ -1,0 +1,111 @@
+create or replace table CTS_EXAM as
+select COLUMN1 as person_id 
+ from values
+   ('{
+  "id": "1234-567-890",
+  "parent_id": "00-123-safsf-3345",
+  "data": [
+    {
+      "id": "sfsfd-234-fgf-55-4545",
+      "values": [
+        {
+          "name": "one",
+          "value": "32"
+        },
+        {
+          "name": "Two",
+          "value": "MMAD"
+        },
+        {
+          "name": "three",
+          "value": ""
+        },
+        {
+          "name": "four",
+          "value": "Bacra-Dacra"
+        },
+        {
+          "name": "five",
+          "value": "33-5455-9"
+        },
+        {
+          "name": "six",
+          "value": ""
+        },
+        {
+          "name": "seven",
+          "value": "4056"
+        },
+        {
+          "name": "eight",
+          "value": "TUU-WWW"
+        },
+        {
+          "name": "nine",
+          "value": ""
+        },
+        {
+          "name": "ten",
+          "value": "234234"
+        }
+      ]
+    },
+    {
+      "id": "asdfsdfsdf-23423-fsff-3445435",
+      "values": [
+        {
+          "name": "One",
+          "value": "32"
+        },
+        {
+          "name": "Two",
+          "value": "MMDI"
+        },
+        {
+          "name": "Three",
+          "value": ""
+        },
+        {
+          "name": "four",
+          "value": "THis is a Test"
+        },
+        {
+          "name": "five",
+          "value": "11-4543535-2"
+        },
+        {
+          "name": "six",
+          "value": ""
+        },
+        {
+          "name": "seven",
+          "value": "4056"
+        },
+        {
+          "name": "eight",
+          "value": "ert erte"
+        },
+        {
+          "name": "nine",
+          "value": ""
+        },
+        {
+          "name": "ten",
+          "value": "343534"
+        }
+      ]
+    }
+  ]
+}');
+
+SELECT * FROM CTS_EXAM;
+
+SELECT person_id:id.value.name AS name,
+person_id:id.value.value AS value
+FROM "TASK"."PUBLIC"."CTS_EXAM";
+
+
+SELECT person_id
+FROM cts_exam
+WHERE 'name' = 'seven' and 'value' = 4056;
+
