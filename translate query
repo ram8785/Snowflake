@@ -1,0 +1,94 @@
+create database SQL;
+
+create table pi(
+season_type varchar,
+season_year varchar,
+package_departure_date date,
+package_type_code varchar,
+promotion_code varchar,
+ob_gateway_code_departure varchar,
+ob_gateway_code_arrival varchar,
+ob_transport_code varchar,
+ib_gateway_code_departure varchar,
+ib_gateway_code_arrival varchar,
+ib_transport_code varchar,
+accom_code varchar,
+room_type_code varchar,
+ob_duration varchar);   
+
+select * from pi;
+
+insert into pi (season_type,season_year,package_departure_date,package_type_code,promotion_code,
+ob_gateway_code_departure,ob_gateway_code_arrival,ob_transport_code,ib_gateway_code_departure,
+ib_gateway_code_arrival,ib_transport_code,accom_code,room_type_code,ob_duration)   
+values('summer','2022','01062022','111','abc','1','10','bbc','cdc','cdc1','qwe','des','10','50');
+
+insert into pi values ('winter','1992','02062022','222','def','2','11','ccd','ded','cdc2','ewq','sed','20','60');
+
+insert into pi values ('rainy','1993','03062022','222','def','2','11','ccd','ded','cdc2','ewq','sed','20','60');
+
+insert into pi values ('monsoon','1994','04062022','222','def','2','11','ccd','ded','cdc2','ewq','sed','20','60');
+
+insert into pi values ('spring','1995','05062022','222','def','2','11','ccd','ded','cdc2','ewq','sed','20','60');
+
+insert into pi values ('autumn','1996','06062022','222','def','2','11','ccd','ded','cdc2','ewq','sed','20','60');
+
+insert into pi values ('prewinter','1997','07062022','222','def','2','11','ccd','ded','cdc2','ewq','sed','20','60');
+
+select * from pi;
+
+SELECT TRANSLATE(SUBSTR(season_type,1,1)
+		         ||SUBSTR(season_year,-2) 
+                 ||TO_CHAR(package_departure_date,'ddMM')
+                 ||package_type_code
+                 ||promotion_code
+                 ||CASE WHEN pi.package_type_code IN ('A','B','I','Z')
+                        THEN 'XXX'
+                        ELSE NVL(pi.ob_gateway_code_departure,'XXX')
+			        END 
+                 ||CASE WHEN pi.package_type_code IN ('A','B','I','Z')
+                        THEN 'XXX'
+                        ELSE NVL(pi.ob_gateway_code_arrival,'XXX')
+				    END
+                 ||CASE WHEN pi.package_type_code IN ('A','B','I','Z')
+                        THEN 'XXXXXXXX'
+                        ELSE pi.ob_transport_code
+				    END
+                 ||CASE WHEN pi.package_type_code IN ('A','B','O','H')
+                        THEN 'XXX'
+                        ELSE pi.ib_gateway_code_arrival
+				    END
+                 ||CASE WHEN pi.package_type_code IN ('A','B','O','H')
+                        THEN 'XXX'
+                        ELSE pi.ib_gateway_code_departure
+				    END
+                 ||CASE WHEN pi.package_type_code IN ('A','B','O','H')
+                        THEN 'XXXXXXXX'
+                        ELSE pi.ib_transport_code
+				    END
+                 ||CASE WHEN pi.package_type_code IN ('O','I','R','H','Z')
+                        THEN 'XXXXXXXX'
+                        ELSE pi.accom_code
+				    END
+                 ||CASE WHEN pi.package_type_code IN ('O','I','R','H','Z')
+                         THEN 'XXXXX'
+                         ELSE pi.room_type_code  --changes from base_room_type_code to room_type_code
+				    END
+                 ||LPAD(TO_CHAR(pi.ob_duration), 2, '0'), '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ -','03V489ABC12DWHITUJK567LMYZNOPQREFGSX-_') AS inventory_item_reference from pi;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
